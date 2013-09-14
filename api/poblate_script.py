@@ -85,7 +85,6 @@ def initRoutes(app=None):
             id_query='post-con-titulo-by-cristian',
             title='post con titulo by cristian',
             author='darkcause',
-            name='Cristian Ríos',
             description='tellmewhatyouwant',
             content='Porque un mago nunca llega tarde ni pronto, llega exactamente cuando se lo propone.',
             cover='http://www.fotos.org/galeria/data/900/impresionante-paisaje-fondos-de-pantalla.jpg',
