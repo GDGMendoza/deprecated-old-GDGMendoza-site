@@ -1,0 +1,32 @@
+<div class="wwa-background">
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-8">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 fix-row-padding" ng-repeat="contributor in contributorList">
+            <div class="wwa-contributor-container">
+                <div class="media">
+                    <a class="pull-left" href="#">
+                        <img class="media-object image-shadow wwa-contributor-image" ng-src="{{contributor.photo}}" alt="Profile photo of {{contributor.name }}">
+                    </a>
+                    <div class="media-body wwa-media-body">
+                        <h4 class="wwa-contributor-name"><a class="red red-hover" ng-href="#/blog/author/{{post.author.id}}">{{contributor.name}}</a></h4>
+                        <p>Developer</p>
+                    </div>
+                </div>
+                <div class="media social-tiny-container">
+                    <a class="pull-left gplus-icon-tiny" href="{{ contributor.gplus }}"><img src="/img/gplus.png" alt=""/></a>
+                    <a class="pull-left fb-icon-tiny" href="{{ contributor.fb }}"><img src="/img/facebook.png" alt=""/></a>
+                    <a class="pull-left tw-icon-tiny"href="{{ contributor.tw }}"><img src="/img/twitter.png" alt=""/></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

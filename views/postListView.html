@@ -1,0 +1,6 @@
+<div class="row" ng-repeat="postpreview in postList | filter: filterBy | filter: search">
+    <postPreview
+                    index="{{$index}}"
+                    post="postpreview">
+    </postPreview>
+</div>

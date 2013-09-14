@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="gdgApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDG Mendoza</title>
+
+    <script src="js/vendor/tinymce/tinymce.min.js"></script><!-- Primera parte Tinymce -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+    <!-- Modules -->
+    <script src="js/vendor/tinymce.js"></script><!-- Segunda parte Tinymce - AngularJS -->
+    <script src="/js/vendor/angular-animate.min.js"></script>
+    <script src="/js/vendor/angular-sanitize.min.js"></script>
+    <script src="/js/vendor/angular-route.min.js"></script>
+    <script src="js/app.js"></script>
+    <!-- BootStrap & CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link href="css/main.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<!-- Dynamic Content -->
+<div id="main-container">
+    <header class="row">
+        <div class="visible-sm visible-xs col-sm-12 col-xs-12 navbar-toggle-container" >
+            <button type="button" class="navbar-toggle pull-right">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <nav class="link-effect row col-md-12">
+            <div class="col-md-1 col-sm-12 col-xs-12 header-center" >
+                <a href="#/blog">Blog</a>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12" >
+                <a href="#/events">Events</a>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12" >
+                <a href="#/who-we-are">WWA</a>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12" >
+                <a href="#">Contact</a>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12" >
+                <a href="#">Login</a>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12" >
+                <a href="#/debug">Debug</a>
+            </div>
+        </nav>
+    </header>
+
+    <div id="body" class="container iswhoweare" ng-view></div>
+
+    <footer class="row">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <img class="pagination-centered footer-logo" src="/img/logo-footer.png" alt="GDG Mendoza Logo"/>
+        </div>
+        <div class="row col-md-6 col-sm-12 col-xs-12">
+            <div class="col-md-3 col-sm-3 col-xs-3 footer-list footer-center">
+                <ul class="list-unstyled">
+                    <li>Home</li>
+                    <li>Blog</li>
+                    <li>WWA</li>
+                    <li>Events</li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 footer-list">
+                <ul class="list-unstyled">
+                    <li>Contact</li>
+                    <li>Search</li>
+                    <li>Login</li>
+                    <li>Register</li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 footer-list">
+                <ul class="list-unstyled">
+                    <li>Follow us</li>
+                    <li>Google Plus</li>
+                    <li>Facebook</li>
+                    <li>Twitter</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>-->
+</body>
+</html>
