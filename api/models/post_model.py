@@ -7,6 +7,7 @@ from api.models.contributor_model import Contributor
 from api.lib.bottle import *
 from api.lib.date_handler import date_handler
 from api.lib.custom_handler import improve
+import datetime
 
 
 class Comment(ndb.Model):
@@ -56,3 +57,27 @@ class Post(ndb.Model):
     @classmethod
     def remove_post(self, id_query):
         return Key("Post", id_query).delete()
+
+    @classmethod
+    def get_comments(self, id_query, date):
+        post = Post.get_by_id(id_query)
+        comentarios = improve(post.to_dict(exclude=["title","author","description","content","cover","date","tags"]))['comments']
+        if date == 'none':
+            return self.check_comments_len(comentarios)
+        else:
+            nofrag, frag = date.split('.')
+            nofrag_dt = datetime.datetime.strptime(nofrag, "%Y-%m-%dT%H:%M:%S")
+            fecha = nofrag_dt.replace(microsecond=int(frag))
+            comentariosFinal = []
+            for comentario in comentarios:
+                if comentario['date'] > fecha:
+                    comentariosFinal.append(comentario)
+            return self.check_comments_len(comentariosFinal)
+
+    @classmethod
+    def check_comments_len(self, comentarios):
+        if len(comentarios) > 0:
+            return json_dumps(comentarios, default=date_handler)
+        else:
+            return 'empty'
+
