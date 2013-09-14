@@ -1,13 +1,35 @@
 <div class="wwa-background">
+    <div class="container wwa-container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="leyend wwa-description-image">
+                    <img class="" src="/img/logo-footer.png" alt="GDG Mendoza Logo"/>
+                </div>
+                <h4 class="red wwa-follow">Follow us:</h4>
+                <p class="grey bold wwa-social"><a class="grey grey-hover bold" href="">Google Plus</a> | <a class="grey grey-hover bold" href="">Facebook</a> | <a class="grey grey-hover bold" href="">Twitter</a></p>
+            </div>
+            <div class="col-md-7">
+                <h2 class="blue leyend">Description</h2>
+                <p class="first-p">
+                    Google Developers Group Mendoza provee una red para la gente interesada en el desarrollo, aprendizaje e implementación de tecnologías Google.
+                </p>
+                <p>
+                    Somos inclusivos, No exclusivos. Nuestros miembros varían entre programadores, estudiantes, presentadores, gente avocada al negocio, diseñadores, webmasters con distintos skills y experiencias. Tratamos de generar un ambiente positivo y entretenido de aprendizaje, comunidad y desarrollo.
+                </p>
+                <h3 class="red">Mission</h3>
+                <p>
+                    Acercar a la comunidad herramientas de código libre desarrolladas por Google
+                </p>
+                <p>
+                    <strong>Aviso Legal:</strong> GDG Mendoza es un grupo independiente; nuestras actividades y opiniones expresadas en esta +Page no debe ser en ningún caso relacionadas con Google, la corporación.
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
-
-        </div>
-        <div class="col-md-8">
-
-        </div>
+        <h2 class="leyend">Contributor Members</h2>
     </div>
     <div class="row">
         <div class="col-md-4 fix-row-padding" ng-repeat="contributor in contributorList">
@@ -22,10 +44,11 @@
                     </div>
                 </div>
                 <div class="media social-tiny-container">
-                    <a class="pull-left gplus-icon-tiny" href="{{ contributor.gplus }}"><img src="/img/gplus.png" alt=""/></a>
-                    <a class="pull-left fb-icon-tiny" href="{{ contributor.fb }}"><img src="/img/facebook.png" alt=""/></a>
-                    <a class="pull-left tw-icon-tiny"href="{{ contributor.tw }}"><img src="/img/twitter.png" alt=""/></a>
+                    <a class="pull-left gplus-icon-tiny" href="{{ contributor.gplus }}" target="_blank"><img src="/img/gplus.png" alt=""/></a>
+                    <a class="pull-left fb-icon-tiny" href="{{ contributor.fb }}" target="_blank"><img src="/img/facebook.png" alt=""/></a>
+                    <a class="pull-left tw-icon-tiny"href="{{ contributor.tw }}" target="_blank"><img src="/img/twitter.png" alt=""/></a>
                 </div>
+                <img src="http://maps.googleapis.com/maps/api/staticmap?center=-32.890178,-68.844067&zoom=14&size=250x200&markers=color:red%7C-32.890178,-68.844067&sensor=false" alt=""/>
             </div>
         </div>
     </div>

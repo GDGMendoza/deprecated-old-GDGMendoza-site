@@ -46,7 +46,7 @@ def initRoutes(app=None):
         tonga.put()
         cristian = Contributor(
             id='darkcause',
-            name='Gil No Pulleaste',
+            name='Cristian Rios',
             photo='https://lh4.googleusercontent.com/-EkSLBBbfffw/AAAAAAAAAAI/AAAAAAAAAFY/w8CTjlpLgjw/s120-c/photo.jpg',
             description='Hola Soy Cristian, me kbio el nombre por no pullear',
             email='matrixcmr@gmail.com',

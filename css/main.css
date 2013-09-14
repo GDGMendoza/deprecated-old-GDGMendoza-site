@@ -36,7 +36,7 @@ h1, h2, h3, h4, h5, h6{
 }
 #body{
     /* padding-bottom must match footer height property*/
-    padding: 10px 0 225px 0;
+    padding: 10px 0 235px 0;
 }
 header, header .row, footer, footer .row{
     margin-left: 0 !important;
@@ -48,7 +48,9 @@ a{
     transition: all 0.3s ease-out;
     text-decoration: none !important
 }
+
 p{
+    margin: 0 0 20px;
     color: #808080;
 }
 /****************************************** END GENERAL *************************************************/
@@ -104,6 +106,19 @@ p{
     margin-left: 0;
 }
 /*********** START TYPOGRAFY ************/
+
+.first-p{
+    margin-top: 10px;
+}
+.bold{
+    font-weight: bold;
+}
+.blue{
+    color: #4285F4;
+}
+.blue-hover:hover,.blue-hover:active{
+    color: #A0C3FF;
+}
 .red{
     color: #DB4437;
 }
@@ -114,6 +129,9 @@ p{
     color: #808080;
 }
 .grey-hover:hover,.grey-hover:active{
+    color: #B3B3B3;
+}
+.light-grey{
     color: #B3B3B3;
 }
 .dark-grey{
@@ -180,10 +198,10 @@ p{
         padding-left:   10px !important;
     }
     #body{
-        padding-bottom: 120px !important;
+        padding-bottom: 130px !important;
     }
     footer{
-        height: 120px !important;
+        height: 130px !important;
     }
     .author-img{
         margin: 20px 40px !important;
@@ -337,9 +355,6 @@ nav a:focus {
     border-bottom: 1px solid #CCCCCC;
     border-left: 3px solid #4285F4;
 }
-.news-title{
-    color: #4285F4;
-}
 /*********** END HOME ************/
 
 /*********** START BLOG ************/
@@ -353,7 +368,7 @@ nav a:focus {
 .big-post-container{
     border: none;
     margin: 20px 0;
-    padding: 0 0 16px 0;
+    padding: 0 0 16px 20px;
 }
 .big-post-title{
     margin-top: 5px;
@@ -373,11 +388,12 @@ nav a:focus {
     background: #F2F2F2;
 }
 .tag-container{
-    min-height: 150px !important;
+    min-height: 55px !important;
+    max-height: 150px !important;
     padding: 10px 0 0 0;
 }
 .tag-container-tiny{
-    padding: 10px 0 10px 0;
+    padding: 10px 0 15px 0;
 }
 .tag-container, .tag-container-tiny{
     margin: 20px 0 0 0;
@@ -414,31 +430,57 @@ nav a:focus {
 /*********** END BLOG ************/
 
 /*********** START WHO WE ARE ************/
+.wwa-container{
+    margin-top: 60px;
+}
 .wwa-background{
-    background: url('/img/world-map.png') no-repeat;
+    background: url('/img/world-map.png') no-repeat center center;
     height: 573px;
     width: 100%;
     -webkit-border-image:   url('/img/line-down.jpg')0 0 5 0 repeat;
     -moz-border-image:      url('/img/line-down.jpg')0 0 5 0 repeat;
     border-image:           url('/img/line-down.jpg')0 0 5 0 repeat;
 }
+.wwa-description-image{
+    padding-bottom: 30px;
+}
+.wwa-follow{
+    margin-top: 30px;
+}
+.wwa-social, .wwa-social a{
+    font-size: 14px;
+}
 .wwa-contributor-container{
     margin: 10px;
-    padding: 10px 0 5px 20px;
+    padding: 10px 0 5px 15px;
     background-color: #F2F2F2;
     -webkit-border-image:   url('/img/horizontal-line.jpg')100% 0 100% 0 repeat !important;
     -moz-border-image:      url('/img/horizontal-line.jpg')100% 0 100% 0 repeat !important;
     border-image:           url('/img/horizontal-line.jpg')100% 0 100% 0 repeat !important;
 }
 .wwa-contributor-image{
+    -webkit-transition: all 0.3s ease-in;
+    -moz-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in;
+    -webkit-filter: grayscale(100%) sepia(100%);
+    -moz-filter:    grayscale(100%) sepia(100%);
+    filtter:        grayscale(100%) sepia(100%);
     height: 80px;
-    margin-top: 10px;
+    margin: 10px 5px 0px 5px;
+}
+.wwa-contributor-container:hover .wwa-contributor-image{
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    -webkit-filter: none;
+    -moz-filter:    none;
+    filtter:        none;
 }
 .wwa-contributor-name{
     margin: 10px 0 0 0 ;
 }
 .social-tiny-container{
-    margin: 10px 0 20px 0;
+    margin: 10px 0 20px 5px;
 }
 .wwa-media-body{
     margin: 10px 0 0 0;
@@ -460,14 +502,14 @@ footer{
     bottom: 0;
     width: 100%;
     /* Height must match #body padding-bottom propery */
-    height: 225px;
+    height: 235px;
     background: #F2F2F2;
     -webkit-border-image:   url('/img/line-down.jpg')0 0 5 0 repeat;
     -moz-border-image:      url('/img/line-down.jpg')0 0 5 0 repeat;
     border-image:           url('/img/line-down.jpg')0 0 5 0 repeat;
 }
 .footer-logo{
-    margin-top: 5px;
+    margin-top: 10px;
 }
 .footer-list{
     margin-top: 15px;
