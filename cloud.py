@@ -23,7 +23,7 @@ class GDGMendozaAPI(remote.Service):
     return query
 
   ################## POST #####################
-  @Post.method(name='post.insert', ########### FUNCIONA ############
+  @Post.method(name='post.insert', ########### FUNCIONA ############ Pero no agrega al author
                path='post/{id}')
   def insert_post(self, post):
       if post.from_datastore:
@@ -32,17 +32,26 @@ class GDGMendozaAPI(remote.Service):
       post.put()
       return post
 
+  @Post.method(name='post.get', ########### FUNCIONA ############ Pero no trae los comentarios
+               request_fields=('id',),
+                 path='getpost/{id}',
+                 http_method='GET')
+  def get_post(self, post):
+      if not post.from_datastore:
+          raise endpoints.NotFoundException('Post not found.')
+      return post
+
   @Post.query_method(name='post.list', ########## NO FUNCIONA ###########
                      path='post')
   def post_list(self, query):
     return query
 
   ################## COMMENT ##################
-  @Post.method(name='comment.insert',
-                  path='post/{id}')
-  def insert_comment(self, post):
-      # Hipoteticamente hablando... debería de seleccionar el post y despues appendear el comentario pero... que se yo jajaja
-      return post
+  #@Post.method(name='comment.insert',
+  #                path='post/{id}')
+  #def insert_comment(self, post):
+  #    # Hipoteticamente hablando... debería de seleccionar el post y despues appendear el comentario pero... que se yo jajaja
+  #    return post
 
 application = endpoints.api_server([GDGMendozaAPI])
 

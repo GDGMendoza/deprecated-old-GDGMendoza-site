@@ -7,7 +7,7 @@ from api.models.contributor_model import Contributor
 class Comment(EndpointsModel):
 
     author = ndb.KeyProperty(kind=Contributor)
-    content = ndb.TextProperty()
+    content = ndb.StringProperty() #### NO ESTA SOPORTANDO TextProperty ####
     date = ndb.DateTimeProperty(auto_now_add=True)
 
 class Post(EndpointsModel):
@@ -15,7 +15,7 @@ class Post(EndpointsModel):
     title = ndb.StringProperty()
     author = ndb.KeyProperty(kind=Contributor)
     description = ndb.StringProperty()
-    content = ndb.TextProperty()
+    content = ndb.StringProperty() #### NO ESTA SOPORTANDO TextProperty ####
     cover = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
     tags = ndb.StringProperty(repeated=True)
@@ -28,3 +28,4 @@ class Post(EndpointsModel):
     def id(self):
         if self.key is not None:
             return self.key.string_id()
+
