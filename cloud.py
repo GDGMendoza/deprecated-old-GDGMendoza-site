@@ -1,0 +1,49 @@
+# -*- coding: utf-8 -*-
+from google.appengine.ext import endpoints
+from protorpc import remote
+
+##################### MODELS ########################
+from api.models_cloud.post_model import Post, Comment
+from api.models_cloud.contributor_model import Contributor
+
+################################################ CLOUD ENDPOINTS SERVICE  ##############################################
+@endpoints.api(name='gdgmendoza', version='v1',
+               description='API for GDG Mendoza Management')
+class GDGMendozaAPI(remote.Service):
+    ############## CONTRIBUTOR ################
+  @Contributor.method(name='contributor.insert', ########### FUNCIONA ############
+               path='contributor')
+  def insert_contributor(self, contributor):
+    contributor.put()
+    return contributor
+
+  @Contributor.query_method(name='contributor.list', ########### FUNCIONA ############
+                     path='contributor')
+  def contributor_list(self, query):
+    return query
+
+  ################## POST #####################
+  @Post.method(name='post.insert', ########### FUNCIONA ############
+               path='post/{id}')
+  def insert_post(self, post):
+      if post.from_datastore:
+          name = post.key.string_id()
+          raise endpoints.BadRequestException( 'Post of name %s already exists.' % (name,))
+      post.put()
+      return post
+
+  @Post.query_method(name='post.list', ########## NO FUNCIONA ###########
+                     path='post')
+  def post_list(self, query):
+    return query
+
+  ################## COMMENT ##################
+  @Post.method(name='comment.insert',
+                  path='post/{id}')
+  def insert_comment(self, post):
+      # Hipoteticamente hablando... debería de seleccionar el post y despues appendear el comentario pero... que se yo jajaja
+      return post
+
+application = endpoints.api_server([GDGMendozaAPI])
+
+############ PARA VER SERVICIOS: /_ah/api/explorer

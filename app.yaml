@@ -42,5 +42,9 @@ handlers:
 #  static_files: index.html
 #  upload: index.html
 
+# Endpoints handler
+- url: /_ah/spi/.*
+  script: cloud.application
+
 - url: .*
   script: gdgmendoza.app
