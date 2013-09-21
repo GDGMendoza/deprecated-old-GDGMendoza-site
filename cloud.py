@@ -2,6 +2,9 @@
 from google.appengine.ext import endpoints
 from protorpc import remote
 
+from api.lib.custom_handler import improve
+import json
+
 ##################### MODELS ########################
 from api.models_cloud.post_model import Post, Comment
 from api.models_cloud.contributor_model import Contributor
@@ -36,13 +39,14 @@ class GDGMendozaAPI(remote.Service):
                request_fields=('id',),
                  path='getpost/{id}',
                  http_method='GET',
-                 response_fields=('title','author','autorcompleto','description','content','cover','date','tags','comentarioscompleto'))
+                 response_fields=('title','author','autorcompleto','description','content','cover','date','tags','comentarioscompleto') ######## AHORA QUIERO QUE ADEMAS DEVUELVA LOS COMENTARIOS Y EL AUTOR COMPLETO DE CADA UNO #######
+  )
   def get_post(self, post):
       if not post.from_datastore:
           raise endpoints.NotFoundException('Post not found.')
       return post
 
-  @Post.query_method(name='post.list', ########## NO FUNCIONA ###########
+  @Post.query_method(name='post.list', ########## FUNCIONA ###########
                      path='post')
   def post_list(self, query):
     return query

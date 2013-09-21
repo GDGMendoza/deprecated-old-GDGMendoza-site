@@ -224,9 +224,15 @@ class _EndpointsQueryInfo(object):
       attr_name = prop._code_name
       current_value = getattr(entity, attr_name)
 
-      # Only filter for non-null values
-      if current_value is not None:
-        self._AddFilter(prop == current_value)
+    ############# AGREGADA FUNCIONALIDAD: https://github.com/GoogleCloudPlatform/endpoints-proto-datastore/issues/67
+      if prop._repeated:
+        for list_value in current_value:
+          self._AddFilter(prop == list_value)
+      else:
+
+          # Only filter for non-null values
+          if current_value is not None:
+            self._AddFilter(prop == current_value)
 
   def SetQuery(self):
     """Sets the final query on the query info object.

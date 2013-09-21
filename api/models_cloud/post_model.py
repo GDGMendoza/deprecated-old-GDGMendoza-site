@@ -3,7 +3,6 @@ from google.appengine.ext import ndb
 from endpoints_proto_datastore.ndb import EndpointsAliasProperty
 from endpoints_proto_datastore.ndb import EndpointsModel
 from api.models.contributor_model import Contributor
-from api.lib.date_handler import date_handler
 from api.lib.custom_handler import improve
 import json
 
@@ -14,6 +13,8 @@ class Comment(EndpointsModel):
     date = ndb.DateTimeProperty(auto_now_add=True)
 
 class Post(EndpointsModel):
+
+    _message_fields_schema = ('id','title','author','description','cover','date','tags') ######## POR DEFECTO DEVUELVE ESTO #######
 
     title = ndb.StringProperty()
     author = ndb.KeyProperty(kind=Contributor)
@@ -32,7 +33,7 @@ class Post(EndpointsModel):
         if self.key is not None:
             return self.key.string_id()
 
-    @EndpointsAliasProperty()
+    @EndpointsAliasProperty() #### Problema, ahora que funciona traer la lista de Post, me devuelve también estos campos, y no quiero que en esa lista se devuelvan.
     def autorcompleto(self):
         return json.dumps(self.author.get().to_dict())
 
