@@ -1325,7 +1325,6 @@ class EndpointsModel(ndb.Model):
           # class. If not, their API users will receive a 503 from an uncaught
           # exception.
           response = response.ToMessage(fields=response_fields)
-
         return response
 
       return apiserving_method_decorator(EntityToRequestMethod)

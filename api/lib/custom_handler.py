@@ -1,7 +1,8 @@
 from google.appengine.ext import ndb
+import datetime
 
 def improve(result, identificador = ""): #explota con las sesiones
-    result["id"] = identificador
+    #result["id"] = identificador
     for key, value in result.iteritems():
         if type(value) is list:
             i = 0
@@ -15,5 +16,7 @@ def improve(result, identificador = ""): #explota con las sesiones
         if isinstance(value,ndb.Key):
             result[key] = improve(result[key].get().to_dict())
             result[key]["id"] = value.id()
+        if hasattr(value,'isoformat'): # By Cristian ! Ty !
+            result[key] = value.isoformat()
 
     return result

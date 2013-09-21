@@ -32,10 +32,11 @@ class GDGMendozaAPI(remote.Service):
       post.put()
       return post
 
-  @Post.method(name='post.get', ########### FUNCIONA ############ Pero no trae los comentarios
+  @Post.method(name='post.get', ########### FUNCIONA ############
                request_fields=('id',),
                  path='getpost/{id}',
-                 http_method='GET')
+                 http_method='GET',
+                 response_fields=('title','author','autorcompleto','description','content','cover','date','tags','comentarioscompleto'))
   def get_post(self, post):
       if not post.from_datastore:
           raise endpoints.NotFoundException('Post not found.')
