@@ -8,6 +8,7 @@ import json
 ##################### MODELS ########################
 from api.models_cloud.post_model import Post, Comment
 from api.models_cloud.contributor_model import Contributor
+from api.models_cloud.event_model import Session, Event
 
 ################################################ CLOUD ENDPOINTS SERVICE  ##############################################
 @endpoints.api(name='gdgmendoza', version='v1',
@@ -33,6 +34,16 @@ class GDGMendozaAPI(remote.Service):
           name = post.key.string_id()
           raise endpoints.BadRequestException( 'Post of name %s already exists.' % (name,))
       post.put()
+      return post
+
+  @Post.method(name='post.delete', ########### FUNCIONA ############
+               path='deletepost/{id}',
+               response_fields=('id',)) ####### Devuelve el ID cuando se borro correctamente #######
+  def delete_post(self, post):
+      if post.from_datastore:
+          Post.remove_post(post.id)
+      else:
+          raise endpoints.NotFoundException('Post not found.')
       return post
 
   @Post.method(name='post.get', ########### FUNCIONA ############
