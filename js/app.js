@@ -23,9 +23,11 @@ app.config(function($routeProvider, $httpProvider) {
             templateUrl: 'postView.html',
             controller: "PostCtrl",
             resolve: {
-                data: function($q, $route, dataService){
+                data: function($q, $route, $rootScope, $timeout, dataService){
                     var defer = $q.defer();
-                    var post = {};
+                    var postId = $route.current.params.postid;
+                    /*var post = {};
+                    //eval("dataService.data.posts[sd].")
                     for(i=0; i<dataService.data.posts.length; i++){
                         if(dataService.data.posts[i].postid === $route.current.params.postid){
                             post = dataService.data.posts[i];
@@ -33,12 +35,46 @@ app.config(function($routeProvider, $httpProvider) {
                     }
                     if(typeof post.postid != "undefined"){
                         defer.resolve(post);
-                    } else {
-                        dataService.getData('blog','getPost',$route.current.params.postid).then(function(response){
-                            console.log(response.data)
-                            defer.resolve(response.data);
+                    } else {*/
+                    dataService.getData('blog','getPost',postId).then(function(response){
+                        console.log(response.data)
+                        defer.resolve(response.data);
+
+                        //Una vez que muestra el post, quiero que traiga los comentarios
+                        var agregarComentarios = function(comentariosNuevos){
+                            angular.forEach(comentariosNuevos, function(value, key){
+                                response.data.comments.push(value);//Agrego los resultados que hayan
+                            });
+                        };
+                        var traerMasComentarios = function(longitud){
+
+                            var fechaUltimoComentario = longitud > 0 ? response.data.comments[longitud - 1].date : 'none';
+
+                            console.log(postId)
+                            console.log(fechaUltimoComentario)
+
+                            dataService.getCristianData('get', 'comments', {'id': postId, 'date': fechaUltimoComentario}).then(function(result){
+                                console.log(result.data)
+                                if(result.data != 'empty'){
+                                    agregarComentarios(result.data);
+                                }
+                            });
+                        };
+                        var timeout = function(){
+                            $timeout(function(){
+                            var longitudComentarios = response.data.comments.length;
+                            traerMasComentarios(longitudComentarios);
+                            timeout();
+                            },10000);//Cada 10 segundos
+                        };
+                        timeout();//Llamo por primera vez a timeout
+                        var mirarCambio = $rootScope.$on('$routeChangeStart', function(next, current){//Al comenzar un cambio de ruta
+                            timeout = function(){};//Vacío la función por lo que no se volvera a llamar
+                            mirarCambio();//Al llamar a mirarCambio, se desactiva el evento.
                         });
-                    }
+
+                    });
+                    //}
                     return defer.promise;
                 }
             }
@@ -68,7 +104,7 @@ app.config(function($routeProvider, $httpProvider) {
 ////////////////////////////////////////////////// END ROUTING /////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////// START SERVICES //////////////////////////////////////////////////////
-app.service('dataService', function($http){
+app.service('dataService', function($http, $location){
     this.data = {
         posts: []
     };
@@ -83,11 +119,23 @@ app.service('dataService', function($http){
         },{cache:true});
     }
 
-    this.getCristianData = function(controller, method, data){
+    this.getCristianData = function(controller, method, data, q, redireccionar, callback){
         return $http.post(controller + "/" + method,{
             'data': data
-        },{cache:true});
+        },{cache:true}).error(function(){
+                if(q){
+                    q.reject();//Si hay error, rechazo lo que tenía que hacer q. Así continua.
+                }
+                if(redireccionar){
+                    $location.path(redireccionar)//Si hay que redireccionar en caso de error, lo hago
+                }
+                if(callback){
+                    callback();
+                }
+                return
+        });
     }
+
 });
 ////////////////////////////////////////////////// END SERVICES ////////////////////////////////////////////////////////
 
@@ -119,7 +167,7 @@ app.controller('PostCtrl', function($scope, $routeParams, $q, data, dataService)
     $scope.escribir = {
         contenido: ''
     };
-    $scope.palabra = 'Comentar';
+    $scope.palabra = 'Send comment';
     $scope.subir = function(){//Sube un comentario
         if($scope.escribir.contenido.trim() == 0) return;
         var defer = $q.defer();

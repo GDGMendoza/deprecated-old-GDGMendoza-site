@@ -55,3 +55,10 @@ def initRoutes(app=None):
             content = request.json["data"]["content"]
         )
         return "Comentario agregado exitosamente!"
+
+    @app.route('/get/comments', method='POST')#Se refiere a los últimos comentarios
+    def getComments():
+        return Post.get_comments(
+            id_query = request.json["data"]["id"],
+            date = request.json["data"]["date"]
+        )
