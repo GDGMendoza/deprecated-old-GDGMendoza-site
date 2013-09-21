@@ -46,7 +46,7 @@ def initRoutes(app=None):
         tonga.put()
         cristian = Contributor(
             id='darkcause',
-            name='Cristian Rios',
+            name='Gil No Pulleaste',
             photo='https://lh4.googleusercontent.com/-EkSLBBbfffw/AAAAAAAAAAI/AAAAAAAAAFY/w8CTjlpLgjw/s120-c/photo.jpg',
             description='Hola Soy Cristian, me kbio el nombre por no pullear',
             email='matrixcmr@gmail.com',
@@ -85,6 +85,7 @@ def initRoutes(app=None):
             id_query='post-con-titulo-by-cristian',
             title='post con titulo by cristian',
             author='darkcause',
+            name='Cristian Ríos',
             description='tellmewhatyouwant',
             content='Porque un mago nunca llega tarde ni pronto, llega exactamente cuando se lo propone.',
             cover='http://www.fotos.org/galeria/data/900/impresionante-paisaje-fondos-de-pantalla.jpg',
