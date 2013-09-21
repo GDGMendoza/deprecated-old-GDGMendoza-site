@@ -25,6 +25,10 @@ class Post(EndpointsModel):
     tags = ndb.StringProperty(repeated=True)
     comments = ndb.StructuredProperty(Comment, repeated=True)
 
+    @classmethod
+    def remove_post(self, id_query):
+        return ndb.Key("Post", id_query).delete()
+
     def IdSet(self, value):
         self.UpdateFromKey(ndb.Key(Post, str(value)))
 
