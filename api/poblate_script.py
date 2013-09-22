@@ -1,8 +1,8 @@
 #  coding: utf-8 --
 from api.lib import bottle
 from api.lib.bottle import *
-from api.models.contributor_model import Contributor
-from api.models.post_model import Comment, Post
+from api.models_cloud.contributor_model import Contributor
+from api.models_cloud.post_model import Comment, Post
 # from api.models.event_model import Event
 # from api.models.session_model import Session
 
@@ -85,6 +85,7 @@ def initRoutes(app=None):
             id_query='post-con-titulo-by-cristian',
             title='post con titulo by cristian',
             author='darkcause',
+            name='Cristian Ríos',
             description='tellmewhatyouwant',
             content='Porque un mago nunca llega tarde ni pronto, llega exactamente cuando se lo propone.',
             cover='http://www.fotos.org/galeria/data/900/impresionante-paisaje-fondos-de-pantalla.jpg',

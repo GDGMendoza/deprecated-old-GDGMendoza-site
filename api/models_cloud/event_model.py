@@ -4,7 +4,7 @@ from google.appengine.ext.ndb.key import Key
 from api.lib.custom_handler import improve
 from api.lib.date_handler import date_handler
 from api.lib.bottle import json_dumps
-from api.models.contributor_model import Contributor
+from api.models_cloud.contributor_model import Contributor
 
 
 class Session (ndb.Model):  #tuvimos que moverlo de session_model a event_model para evitar una puta referencia ciclica

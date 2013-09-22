@@ -1,7 +1,6 @@
 #  coding: utf-8 --
 from api.lib import bottle
 from api.lib.bottle import *
-from api import blog, contributors, events
 from api import poblate_script
 # Si vamos a tener por separado los handlers, aca no deberiamos importar modelos :P
 # from api.models import *
@@ -24,7 +23,4 @@ def index():
     #return bottle.json_dumps({"nombre": "pepe"}) #devuelve objeto json
     #return bottle.json_dumps([{"nombre": "pepe"},{"nombre": "honguito"}]) #devuelve array json
 
-blog.initRoutes(app)
-contributors.initRoutes(app)
-events.initRoutes(app)
 poblate_script.initRoutes(app)

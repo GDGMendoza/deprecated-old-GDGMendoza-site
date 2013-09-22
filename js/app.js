@@ -3,11 +3,11 @@ var app = angular.module('gdgApp', ['ngRoute','ngAnimate','ngSanitize','ui.tinym
 ////////////////////////////////////////////////// START ROUTING ///////////////////////////////////////////////////////
 app.config(function($routeProvider, $httpProvider) {
     $routeProvider.when('/', {
-        templateUrl:'views/homeView.html',
+        templateUrl:'homeView.html',
         controller:"HomeCtrl"
     })
         .when('/blog', {
-            templateUrl: 'views/postListView.html',
+            templateUrl: 'postListView.html',
             controller: "PostListCtrl",
             resolve: {
                 data: function($q, dataService){
@@ -20,7 +20,7 @@ app.config(function($routeProvider, $httpProvider) {
                 }
             }
         }).when('/blog/:postid',{
-            templateUrl: 'views/postView.html',
+            templateUrl: 'postView.html',
             controller: "PostCtrl",
             resolve: {
                 data: function($q, $route, $rootScope, $timeout, dataService){
@@ -78,27 +78,14 @@ app.config(function($routeProvider, $httpProvider) {
                     return defer.promise;
                 }
             }
-        }).when('/blog/:filter/:query',{
-            templateUrl: 'views/postListView.html',
-            controller: "SearchPostCtrl",
-            resolve: {
-                data: function($q, dataService){
-                    var defer = $q.defer();
-                    dataService.getData('blog','getPostList','-1').then(function(response){
-                        dataService.saveData("filter", response.data);
-                        defer.resolve();
-                    });
-                    return defer.promise;
-                }
-            }
         }).when('/events',{
-            templateUrl: 'views/eventsView.html',
+            templateUrl: 'eventsView.html',
             controller: "EventsCtrl"
         }).when('/debug',{
-            templateUrl: 'views/debug.html',
+            templateUrl: 'debug.html',
             controller: "DebugCtrl"
         }).when('/who-we-are',{
-            templateUrl: 'views/whoWeAre.html',
+            templateUrl: 'whoWeAre.html',
             controller: "WWACtrl",
             resolve: {
                 data: function($q, dataService){
@@ -161,54 +148,18 @@ app.controller('EventsCtrl', function($scope){
 
 app.controller('PostListCtrl', function($scope, dataService){
     $scope.postList = dataService.data.posts;
+    $scope.getPostTemplate = function(index){
+        if(index%4==0){
+            return 'postPreviewBigComponent.html';
+        }else{
+            return 'postPreviewTinyComponent.html';
+        }
+    }
 });
 
 app.controller('WWACtrl',function($scope,dataService){
     $scope.contributorList = dataService.data.contributors;
 })
-
-app.controller('SearchPostCtrl', function($scope, $routeParams, $location, dataService){
-
-    $scope.postList = dataService.data.filter;
-    $scope.filterBy = {date: "", author: "", tags: ""};
-    $scope.filter = $routeParams.filter;
-    $scope.query = $routeParams.query;
-
-    $scope.activeSearch = true;
-
-    switch($scope.filter){
-        case "date":
-            if ($scope.filterBy.date != $scope.query) {
-                $scope.filterBy.date = $scope.query;
-                $scope.filterBy.tags = "";
-                $scope.filterBy.author = "";
-            } else{
-                $scope.filterBy.date = "";
-            };
-            break;
-        case "author":
-            if ($scope.filterBy.author != $scope.query) {
-                $scope.filterBy.author = $scope.query;
-                $scope.filterBy.tags = "";
-                $scope.filterBy.date = "";
-            } else{
-                $scope.filterBy.author = "";
-            };
-            break;
-        case "tag":
-            if ($scope.filterBy.tag != $scope.query) {
-                $scope.filterBy.tags = $scope.query;
-                $scope.filterBy.author = "";
-                $scope.filterBy.date = "";
-            } else{
-                $scope.filterBy.tags = "";
-            };
-            break;
-        default:
-            $location.path("/blog");
-            break;
-    }
-});
 
 app.controller('PostCtrl', function($scope, $routeParams, $q, data, dataService){
     $scope.post = data;
@@ -255,46 +206,6 @@ app.directive('iswhoweare',function($location){
         }
     }
 })
-app.directive('contributor', function(){
-    return {
-        restrict: "E",
-        scope:{
-            author: '@',
-            photo: '@',
-            description: '@',
-            gplus: '@',
-            fb: '@',
-            tw: '@'
-        },
-        templateUrl: 'components/contributorComponent.html'
-    };
-});
-
-app.directive('postpreview', function(){
-    return {
-        restrict: "E",
-        scope:{
-            index: '@',
-            post: '='
-        },
-        templateUrl:'components/postPreviewBigComponent.html'
-    };
-});
-
-app.directive('post', function(){
-    return {
-        restrict: "E",
-        /*scope:{ A la miercoles el scope del post
-            title: '@',
-            author: '@',
-            content: '@',
-            cover: '@',
-            date: '@',
-            tags: '='
-        },*/
-        templateUrl: 'components/postComponent.html'
-    };
-});
 
 app.directive('commentsForm',function () {
     return {
