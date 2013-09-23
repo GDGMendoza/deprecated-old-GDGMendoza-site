@@ -6,7 +6,7 @@ from endpoints_proto_datastore.ndb import EndpointsAliasProperty
 
 class Contributor(EndpointsModel):
 
-    _message_fields_schema = ('name', 'job_position', 'company', 'google_plus', 'facebook', 'twitter', 'description', 'photo')
+    _message_fields_schema = ('name', 'job_position', 'company', 'google_plus', 'facebook', 'twitter', 'description', 'photo', 'id')
 
     name = ndb.StringProperty(required=True)
     job_position = ndb.StringProperty()

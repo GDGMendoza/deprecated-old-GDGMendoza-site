@@ -1,7 +1,25 @@
 var app = angular.module('gdgApp', ['ngRoute','ngAnimate','ngSanitize','ui.tinymce']);
 
+function init(){
+    $window.init();
+}
+
 ////////////////////////////////////////////////// START ROUTING ///////////////////////////////////////////////////////
 app.config(function($routeProvider, $httpProvider) {
+
+    $window = app.service("$window");
+
+    /* Hay que poner un promise .... no se tiene que ver nada hasta estar cargada la api */
+    $window.init = function(){
+
+        gapi.client.load('gdgmendoza', 'v1', function() {
+
+            console.log("api cargada")
+
+        }, '/_ah/api');
+
+    };
+
     $routeProvider.when('/', {
         templateUrl:'homeView.html',
         controller:"HomeCtrl"
@@ -12,10 +30,15 @@ app.config(function($routeProvider, $httpProvider) {
             resolve: {
                 data: function($q, dataService){
                     var defer = $q.defer();
-                    dataService.getData('blog','getPostList','').then(function(response){
-                        dataService.saveData("posts", response.data);
+
+                    gapi.client.gdgmendoza.post.list().execute(function(response) {
+
+                        dataService.saveData("posts", response.items)
+
                         defer.resolve();
+
                     });
+
                     return defer.promise;
                 }
             }
@@ -105,6 +128,7 @@ app.config(function($routeProvider, $httpProvider) {
 
 ////////////////////////////////////////////////// START SERVICES //////////////////////////////////////////////////////
 app.service('dataService', function($http, $location){
+
     this.data = {
         posts: []
     };

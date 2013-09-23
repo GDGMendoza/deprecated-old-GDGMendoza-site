@@ -1,6 +1,4 @@
 #  coding: utf-8 --
-from api.lib import bottle
-from api.lib.bottle import *
 from api.models_cloud.contributor_model import Contributor
 from api.models_cloud.post_model import Comment, Post
 # from api.models.event_model import Event
@@ -8,8 +6,6 @@ from api.models_cloud.post_model import Comment, Post
 
 
 def initRoutes(app=None):
-    if not app:
-        app = bottle.default_app()
 
     @app.route('/scripts/poblate', method='GET')
     def poblateDatastore():

@@ -3,7 +3,6 @@ from google.appengine.ext import ndb
 from google.appengine.ext.ndb.key import Key
 from api.lib.custom_handler import improve
 from api.lib.date_handler import date_handler
-from api.lib.bottle import json_dumps
 from api.models_cloud.contributor_model import Contributor
 
 

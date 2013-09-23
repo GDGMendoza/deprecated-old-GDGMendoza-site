@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from google.appengine.ext import endpoints
 from protorpc import remote
-
+from google.appengine.ext import ndb
 
 from api.lib.custom_handler import improve
 import json
@@ -35,12 +35,14 @@ class GDGMendozaAPI(remote.Service):
         return query
 
     ################## POST #####################
-    @Post.method(name='post.insert', ########### FUNCIONA ############ Pero no agrega al author
-                 path='post')
+    @Post.method(name='post.insert', ########### FUNCIONA ############
+                 path='post',
+                 user_required=True)
     def insert_post(self, post):
         if post.from_datastore:
             name = post.key.string_id()
             raise endpoints.BadRequestException( 'Post of name %s already exists.' % (name,))
+        post.author = ndb.Key(Contributor, endpoints.get_current_user().email())
         post.put()
         return post
 
@@ -49,7 +51,7 @@ class GDGMendozaAPI(remote.Service):
                  response_fields=('id',)) ####### Devuelve el ID cuando se borro correctamente #######
     def delete_post(self, post):
         if post.from_datastore:
-            Post.Key("Post", post.id).delete()  #remove_post(post.id) PUEDE ROMPERSE
+            Post.Key("Post", post.id).delete()
         else:
             raise endpoints.NotFoundException('Post not found.')
         return post
@@ -58,7 +60,7 @@ class GDGMendozaAPI(remote.Service):
                  request_fields=('id',),
                  path='getpost/{id}',
                  http_method='GET',
-                 response_fields=('title','author','description','content','cover','date','tags') ######## AHORA QUIERO QUE ADEMAS DEVUELVA LOS COMENTARIOS Y EL AUTOR COMPLETO DE CADA UNO #######
+                 response_fields=('title','author_id','description','content','cover','date','tags') ######## AHORA QUIERO QUE ADEMAS DEVUELVA LOS COMENTARIOS Y EL AUTOR COMPLETO DE CADA UNO #######
     )
     def get_post(self, post):
         if not post.from_datastore:

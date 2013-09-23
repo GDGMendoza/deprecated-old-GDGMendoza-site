@@ -9,21 +9,16 @@ from api.models_cloud.comment_model import Comment
 class Post(EndpointsModel):
 
     #POR DEFECTO DEVUELVE ESTO
-    _message_fields_schema = ('id', 'title', 'author', 'description', 'cover', 'date', 'tags')
+    _message_fields_schema = ('id', 'title', 'author_id', 'description', 'cover', 'date', 'tags')
 
     title = ndb.StringProperty()
-    authorkey = ndb.KeyProperty(kind=Contributor)
+    author = ndb.KeyProperty(kind=Contributor)
     description = ndb.StringProperty()
     content = ndb.StringProperty()  #va a explotar Textproperty
     cover = ndb.StringProperty(required=True)
     date = ndb.DateTimeProperty(auto_now_add=True)
     tags = ndb.StringProperty(repeated=True)
     comments = ndb.StructuredProperty(Comment, repeated=True)
-
-
-    @EndpointsAliasProperty(required=True, property_type=Contributor.ProtoModel())
-    def author(self):
-        return ndb.get(self.authorkey)
 
     def IdSet(self, value):
         self.UpdateFromKey(ndb.Key(Post, str(value)))
@@ -32,6 +27,10 @@ class Post(EndpointsModel):
     def id(self):
         if self.key is not None:
             return self.key.string_id()
+
+    @EndpointsAliasProperty()
+    def author_id(self):
+        return self.author.get().id
 
     #@EndpointsAliasProperty() #### Problema, ahora que funciona traer la lista de Post, me devuelve también estos campos, y no quiero que en esa lista se devuelvan.
     #def autorcompleto(self):

@@ -4,6 +4,12 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 
+libraries:
+- name: jinja2
+  version: latest
+#- name: models
+#  version: latest
+
 handlers:
 
 #- url: /controllers
