@@ -31,13 +31,3 @@ class Post(EndpointsModel):
     @EndpointsAliasProperty()
     def author_id(self):
         return self.author.get().id
-
-    #@EndpointsAliasProperty() #### Problema, ahora que funciona traer la lista de Post, me devuelve también estos campos, y no quiero que en esa lista se devuelvan.
-    #def autorcompleto(self):
-    #    return json.dumps(self.author.get().to_dict())
-
-    #@EndpointsAliasProperty()
-    #def comentarioscompleto(self):
-    #    post = Post.get_by_id(self.id)
-    #    return json.dumps(improve(post.to_dict(exclude=["title","author","description","content","cover","date","tags"]))['comments'])
-    #revisar por diferencia entre method y query_method al traer los comentarios

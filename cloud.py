@@ -72,12 +72,17 @@ class GDGMendozaAPI(remote.Service):
     def post_list(self, query):
         return query
 
-        ################## COMMENT ##################
-        #@Post.method(name='comment.insert',
-        #                path='post/{id}')
-        #def insert_comment(self, post):
-        #    # Hipoteticamente hablando... debería de seleccionar el post y despues appendear el comentario pero... que se yo jajaja
-        #    return post
+    ################## COMMENT ##################
+    @Comment.method(name='comment.insert', ########## FUNCIONA ###########
+                    request_fields=('post_id','content'),
+                    path='comment',
+                    user_required=True,
+                    response_fields=('post_id',))
+    def insert_comment(self, comment):
+        post = Post.get_by_id(comment.post_id)
+        post.comments.append(Comment(content = comment.content, author = ndb.Key(Contributor, str(endpoints.get_current_user().email()))))
+        post.put()
+        return comment
 
 application = endpoints.api_server([GDGMendozaAPI])
 
