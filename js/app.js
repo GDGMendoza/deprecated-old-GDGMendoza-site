@@ -49,55 +49,15 @@ app.config(function($routeProvider, $httpProvider) {
                 data: function($q, $route, $rootScope, $timeout, dataService){
                     var defer = $q.defer();
                     var postId = $route.current.params.postid;
-                    /*var post = {};
-                    //eval("dataService.data.posts[sd].")
-                    for(i=0; i<dataService.data.posts.length; i++){
-                        if(dataService.data.posts[i].postid === $route.current.params.postid){
-                            post = dataService.data.posts[i];
-                        }
-                    }
-                    if(typeof post.postid != "undefined"){
-                        defer.resolve(post);
-                    } else {*/
-                    dataService.getData('blog','getPost',postId).then(function(response){
-                        console.log(response.data)
-                        defer.resolve(response.data);
 
-                        //Una vez que muestra el post, quiero que traiga los comentarios
-                        var agregarComentarios = function(comentariosNuevos){
-                            angular.forEach(comentariosNuevos, function(value, key){
-                                response.data.comments.push(value);//Agrego los resultados que hayan
-                            });
-                        };
-                        var traerMasComentarios = function(longitud){
+                    gapi.client.gdgmendoza.post.get({'id':postId}).execute(function(response) {
 
-                            var fechaUltimoComentario = longitud > 0 ? response.data.comments[longitud - 1].date : 'none';
+                        response.comments_all = JSON.parse(response.comments_all);
 
-                            console.log(postId)
-                            console.log(fechaUltimoComentario)
-
-                            dataService.getCristianData('get', 'comments', {'id': postId, 'date': fechaUltimoComentario}).then(function(result){
-                                console.log(result.data)
-                                if(result.data != 'empty'){
-                                    agregarComentarios(result.data);
-                                }
-                            });
-                        };
-                        var timeout = function(){
-                            $timeout(function(){
-                            var longitudComentarios = response.data.comments.length;
-                            traerMasComentarios(longitudComentarios);
-                            timeout();
-                            },10000);//Cada 10 segundos
-                        };
-                        timeout();//Llamo por primera vez a timeout
-                        var mirarCambio = $rootScope.$on('$routeChangeStart', function(next, current){//Al comenzar un cambio de ruta
-                            timeout = function(){};//Vacío la función por lo que no se volvera a llamar
-                            mirarCambio();//Al llamar a mirarCambio, se desactiva el evento.
-                        });
+                        defer.resolve(response);
 
                     });
-                    //}
+
                     return defer.promise;
                 }
             }
@@ -187,19 +147,22 @@ app.controller('WWACtrl',function($scope,dataService){
 
 app.controller('PostCtrl', function($scope, $routeParams, $q, data, dataService){
     $scope.post = data;
-    $scope.configTinymce = {language: 'es', plugins:'image link', resize: false, preview_styles: false, statusbar: false, menubar: false, toolbar: 'bold italic underline strikethrough alignleft aligncenter alignright alignjustify bullist numlist removeformat link image', height: 200};
+    //$scope.configTinymce = {language: 'es', plugins:'image link', resize: false, preview_styles: false, statusbar: false, menubar: false, toolbar: 'bold italic underline strikethrough alignleft aligncenter alignright alignjustify bullist numlist removeformat link image', height: 200};
     $scope.escribir = {
         contenido: ''
     };
-    $scope.palabra = 'Send comment';
     $scope.subir = function(){//Sube un comentario
         if($scope.escribir.contenido.trim() == 0) return;
         var defer = $q.defer();
-        dataService.getCristianData('put', 'comment', {'id': $scope.post.id, 'content': $scope.escribir.contenido, 'author': 'darkcause'/*dataService.data.login.usuario*/}).then(function(response){
-            console.log(response.data)
-            $scope.escribir.contenido = '';
+
+        gapi.client.gdgmendoza.comment.insert({'post_id': $scope.post.id, 'content': $scope.escribir.contenido}).execute(function(response) {
+
+            //Hay que activar la autentificación para que funcione.. al parecer..
+
             defer.resolve();
+
         });
+
         return defer.promise;
     };
     //return $scope.PostCtrl = this;

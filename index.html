@@ -220,8 +220,15 @@
                 <a class="pull-right fb-icon fb-icon-big" href="{{ post.author.fb }}"><img src="/img/facebook.png" alt=""/></a>
                 <a class="pull-right tw-icon tw-icon-big"href="{{ post.author.tw }}"><img src="/img/twitter.png" alt=""/></a>
             </div>
-            <comments-form mensaje="mensaje" ></comments-form>
-            <comment ng-repeat="comment in post.comments"></comment>
+            <comment ng-repeat="comment in post.comments_all"></comment>
+            <form method="post" ng-submit="subir()">
+                <div class="tiny-post-container">
+                    <textarea class="comment" ng-model="escribir.contenido" placeholder="Write a comment..." maxlength="500"></textarea>
+                    <div class="marco bot auto right">
+                        <button type="submit" class="btn comment">Send</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </script>

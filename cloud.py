@@ -3,9 +3,6 @@ from google.appengine.ext import endpoints
 from protorpc import remote
 from google.appengine.ext import ndb
 
-from api.lib.custom_handler import improve
-import json
-
 ##################### MODELS ########################
 from api.models_cloud.post_model import Post
 from api.models_cloud.comment_model import Comment
@@ -58,14 +55,25 @@ class GDGMendozaAPI(remote.Service):
 
     @Post.method(name='post.get', ########### FUNCIONA ############
                  request_fields=('id',),
-                 path='getpost/{id}',
+                 path='getpost',
                  http_method='GET',
-                 response_fields=('title','author_id','description','content','cover','date','tags') ######## AHORA QUIERO QUE ADEMAS DEVUELVA LOS COMENTARIOS Y EL AUTOR COMPLETO DE CADA UNO #######
+                 response_fields=('title','author_id','description','content','cover','date','tags','comments_all') ######## AHORA QUIERO QUE ADEMAS DEVUELVA LOS COMENTARIOS Y EL AUTOR COMPLETO DE CADA UNO #######
     )
     def get_post(self, post):
         if not post.from_datastore:
             raise endpoints.NotFoundException('Post not found.')
         return post
+
+    # @Post.method(name='post.get', ########### FUNCIONA ############
+    #              request_fields=('id',),
+    #              path='getpost/{id}',
+    #              http_method='GET',
+    #              response_fields=('title','author_id','description','content','cover','date','tags','comments_all') ######## AHORA QUIERO QUE ADEMAS DEVUELVA LOS COMENTARIOS Y EL AUTOR COMPLETO DE CADA UNO #######
+    # )
+    # def get_post(self, post):
+    #     if not post.from_datastore:
+    #         raise endpoints.NotFoundException('Post not found.')
+    #     return post
 
     @Post.query_method(name='post.list', ########## FUNCIONA ###########
                        path='post')
@@ -77,7 +85,7 @@ class GDGMendozaAPI(remote.Service):
                     request_fields=('post_id','content'),
                     path='comment',
                     user_required=True,
-                    response_fields=('post_id',))
+                    response_fields=('post_id',)) ####### Devuelve el ID cuando se borro correctamente #######
     def insert_comment(self, comment):
         post = Post.get_by_id(comment.post_id)
         post.comments.append(Comment(content = comment.content, author = ndb.Key(Contributor, str(endpoints.get_current_user().email()))))

@@ -4,7 +4,7 @@ from endpoints_proto_datastore.ndb import EndpointsAliasProperty
 from endpoints_proto_datastore.ndb import EndpointsModel
 from api.models_cloud.contributor_model import Contributor
 from api.models_cloud.comment_model import Comment
-
+import json
 
 class Post(EndpointsModel):
 
@@ -31,3 +31,11 @@ class Post(EndpointsModel):
     @EndpointsAliasProperty()
     def author_id(self):
         return self.author.get().id
+
+    @EndpointsAliasProperty()
+    def comments_all(self):
+        post = Post._get_by_id(self.id)
+        comments = []
+        for comment in post.comments:
+            comments.append({'author_id':comment.author.get().id,'content':comment.content,'date':comment.date.isoformat()})
+        return json.dumps(comments)
