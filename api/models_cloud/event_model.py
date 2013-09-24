@@ -1,12 +1,11 @@
 #  coding: utf-8 --
 from google.appengine.ext import ndb
-from google.appengine.ext.ndb.key import Key
-from api.lib.custom_handler import improve
-from api.lib.date_handler import date_handler
+from endpoints_proto_datastore.ndb import EndpointsAliasProperty
+from endpoints_proto_datastore.ndb import EndpointsModel
 from api.models_cloud.contributor_model import Contributor
+import json
 
-
-class Session (ndb.Model):  #tuvimos que moverlo de session_model a event_model para evitar una puta referencia ciclica
+class Session (EndpointsModel):  #tuvimos que moverlo de session_model a event_model para evitar una puta referencia ciclica
                             #que anulaba toda la pagina
 
     title = ndb.StringProperty()
@@ -14,45 +13,19 @@ class Session (ndb.Model):  #tuvimos que moverlo de session_model a event_model 
     startTime = ndb.StringProperty()
     endTime = ndb.StringProperty()
     contributors = ndb.KeyProperty(kind=Contributor, repeated=True)
+    contributors_id = ndb.StringProperty(repeated=True)
 
-    @classmethod
-    def get_all_json(self):
-        return json_dumps([improve(session.to_dict(), session.key.id()) for session in Session.query()], default=date_handler)
+    def IdSet(self, value):
+        self.UpdateFromKey(ndb.Key(Session, str(value)))
 
-    @classmethod
-    def get_id_json(self, id_query):
-        session = Session.get_by_id(id_query)
-        return json_dumps(improve(session.to_dict(),identificador=session.key.id()), default=date_handler)
+    @EndpointsAliasProperty(setter=IdSet, required=True)
+    def id(self):
+        if self.key is not None:
+            return self.key.string_id()
 
-    @classmethod
-    def put_session(self, id_query, title, overview, startTime, endTime, contributors):
-        return Session(id=id_query, title=title, overview=overview, startTime=startTime, endTime=endTime, contributors=[Key("Contributor", contributor) for contributor in contributors]).put()
+class Event (EndpointsModel):
 
-    @classmethod
-    def append_session(self, id_event, id_session):
-        event = Event.get_by_id(id_event)
-        flag = True
-        for item in event.sessions:
-            if item == Key("Session", id_session):
-                flag = False
-        if flag:
-            event.sessions.append(Key("Session", id_session))
-        #if event.sessions.index(Key("Session", id_session)) == -1 :
-        #    event.sessions.append(Key("Session", id_session))
-        return event.put()
-
-    @classmethod
-    def remove_session_from_event(self, id_event, id_session):
-        event = Event.get_by_id(id_event)
-        event.sessions.remove(Key("Session", id_session))
-        return event.put()
-
-    @classmethod
-    def remove_session(self, id_query):
-        return Key("Session", id_query).delete()
-
-
-class Event (ndb.Model):
+    _message_fields_schema = 'id', 'title', 'description', 'date', 'tags', 'gmap', 'flag', 'gplus_eventid'
 
     title = ndb.StringProperty()
     description = ndb.StringProperty()
@@ -62,30 +35,20 @@ class Event (ndb.Model):
     flag = ndb.StringProperty()
     gplus_eventid = ndb.StringProperty()
     sessions = ndb.KeyProperty(kind=Session, repeated=True)
-    #id usuario en gplus donde se encuentran las fotos del evento
-    #id del album de ese usuario donde estan las fotos
+    sessions_id = ndb.StringProperty(repeated=True)
 
-    @classmethod
-    def get_all_json(self):
-        return json_dumps([improve(event.to_dict(), event.key.id()) for event in Event.query()], default=date_handler)
+    def IdSet(self, value):
+        self.UpdateFromKey(ndb.Key(Event, str(value)))
 
-    @classmethod
-    def get_id_json(self, id_query):
-        event = Event.get_by_id(id_query)
-        return json_dumps(improve(event.to_dict(),identificador=event.key.id()), default=date_handler)
+    @EndpointsAliasProperty(setter=IdSet, required=True)
+    def id(self):
+        if self.key is not None:
+            return self.key.string_id()
 
-    @classmethod
-    def put_event(self, id_query, title, description, date, tags, gmap, gplus_eventid):
-        return Event(
-            id = id_query,
-            title = title,
-            description = description,
-            date = date,
-            tags = tags, #cuidado que este deberia ser un array
-            gmap = gmap,
-            gplus_eventid = gplus_eventid
-        ).put()
-
-    @classmethod
-    def remove_event(self, id_query):
-        return Key("Event", id_query).delete()
+    @EndpointsAliasProperty() ######## NO FUNCIONA NI QUE LE PAGUES ¬¬ #######
+    def full_sessions(self):
+        data = []
+        for session in self.sessions:
+            session_add = Session.get_by_id(session.id())
+            data.append({'title': session_add.title, 'overview': session_add.overview, 'startTime': session_add.startTime, 'endTime': session_add.endTime, 'contributors_id': session_add.contributors_id})
+        return json.dumps(data)

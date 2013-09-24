@@ -44,11 +44,8 @@
             <div class="col-md-1 col-sm-12 col-xs-12" >
                 <a href="#">Contact</a>
             </div>
-            <div class="col-md-1 col-sm-12 col-xs-12" >
-                <a href="#">Login</a>
-            </div>
-            <div class="col-md-1 col-sm-12 col-xs-12" >
-                <a href="#/debug">Debug</a>
+            <div class="col-md-1 col-sm-12 col-xs-12" ng-controller="LoginCtrl" >
+                <a href="" ng-click="login()">Login</a>
             </div>
         </nav>
     </header>
@@ -161,7 +158,7 @@
             </div>
         </div>
         <div class="col-md-9 col-sm-3 col-xs-12 big-post-container line-height">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab doloribus earum nulla similique! A accusantium animi asperiores blanditiis dolorem eius eos esse expedita facere fuga in molestiae nam nobis nostrum omnis praesentium provident quaerat quas, quo recusandae repellendus sint tempora vero. In qui, voluptas? Eveniet ipsa possimus repellat totam? Ipsam?{{post.description}}</p>
+            <p>{{post.description}}</p>
             <a href="#/blog/{{ post.id }}">Read more</a>
         </div>
     </div>
@@ -191,7 +188,7 @@
             </div>
             <div class="col-md-9 col-sm-9 col-xs-12 tiny-description">
                 <h4><a class="dark-grey dark-grey-hover" ng-href="#/blog/{{post.id}}">{{post.title}}</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet blanditiis, consectetur culpa deleniti enim iste nam, placeat porro provident quas, quod quos vero voluptatibus voluptatum.{{post.description}}</p>
+                <p>{{post.description}}</p>
                 <a href="#/blog/{{ post.id }}">Read more</a>
             </div>
         </div>
@@ -213,8 +210,8 @@
         <div class="col-md-9 col-sm-9 col-xs-12 big-post-container line-height">
             <h1 class="dark-grey post-title">{{ post.title }}</h1>
             <a class="big-post-date light-grey light-grey-hover" ng-href="#">Date: {{post.date}}</a>
-            <p class="post-paragraph">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab doloribus earum nulla similique! A accusantium animi asperiores blanditiis dolorem eius eos esse expedita facere fuga in molestiae nam nobis nostrum omnis praesentium provident quaerat quas, quo recusandae repellendus sint tempora vero. In qui, voluptas? Eveniet ipsa possimus repellat totam? Ipsam?{{post.description}}</p>
-            <p class="post-paragraph">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab doloribus earum nulla similique! A accusantium animi asperiores blanditiis dolorem eius eos esse expedita facere fuga in molestiae nam nobis nostrum omnis praesentium provident quaerat quas, quo recusandae repellendus sint tempora vero. In qui, voluptas? Eveniet ipsa possimus repellat totam? Ipsam?{{post.description}}</p>
+            <p class="post-paragraph">{{post.description}}</p>
+            <p class="post-paragraph">{{post.description}}</p>
             <div class="row separator post-social-container">
                 <a class="pull-right gplus-icon gplus-icon-big" href="{{ post.author.gplus }}"><img src="/img/gplus.png" alt=""/></a>
                 <a class="pull-right fb-icon fb-icon-big" href="{{ post.author.fb }}"><img src="/img/facebook.png" alt=""/></a>

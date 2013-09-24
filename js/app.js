@@ -64,19 +64,20 @@ app.config(function($routeProvider, $httpProvider) {
         }).when('/events',{
             templateUrl: 'eventsView.html',
             controller: "EventsCtrl"
-        }).when('/debug',{
-            templateUrl: 'debug.html',
-            controller: "DebugCtrl"
         }).when('/who-we-are',{
             templateUrl: 'whoWeAre.html',
             controller: "WWACtrl",
             resolve: {
                 data: function($q, dataService){
                     var defer = $q.defer();
-                    dataService.getData('contributor','getContributorList','-1').then(function(response){
-                        dataService.saveData("contributors", response.data);
+
+                    gapi.client.gdgmendoza.contributor.list().execute(function(response) {
+
+                        dataService.saveData("contributors", response.items);
                         defer.resolve();
+
                     });
+
                     return defer.promise;
                 }
             }
@@ -95,29 +96,6 @@ app.service('dataService', function($http, $location){
 
     this.saveData = function(controller, datos) {
         this.data[controller] = datos;
-    }
-
-    this.getData = function(controller, method, id){
-        return $http.post(controller + "/" + method,{
-            'id': id
-        },{cache:true});
-    }
-
-    this.getCristianData = function(controller, method, data, q, redireccionar, callback){
-        return $http.post(controller + "/" + method,{
-            'data': data
-        },{cache:true}).error(function(){
-                if(q){
-                    q.reject();//Si hay error, rechazo lo que tenía que hacer q. Así continua.
-                }
-                if(redireccionar){
-                    $location.path(redireccionar)//Si hay que redireccionar en caso de error, lo hago
-                }
-                if(callback){
-                    callback();
-                }
-                return
-        });
     }
 
 });
@@ -168,14 +146,31 @@ app.controller('PostCtrl', function($scope, $routeParams, $q, data, dataService)
     //return $scope.PostCtrl = this;
 });
 
-app.controller('DebugCtrl', function($scope,$http){
-    $scope.pegar = function(){
-        $http.post($scope.url, JSON.parse($scope.params)).then(function(response){
-            $scope.response = response.data;
-        });
+app.controller('LoginCtrl', function($scope){
+    $scope.login = function(){
+        console.log('Loguear')
+
+        /* Para probarlo creo que hay que registrar la App https://cloud.google.com/console */
+
+        gapi.auth.authorize({client_id: 'gdgmendoza.apps.googleusercontent.com',
+            scope: 'https://www.googleapis.com/auth/userinfo.email', immediate: 'false',
+            response_type: 'token id_token'},
+        userAuthed);
+
+        function userAuthed() {
+          var request =
+              gapi.client.oauth2.userinfo.get().execute(function(resp) {
+             console.log(resp)
+            if (!resp.code) {
+              var token = gapi.auth.getToken();
+              token.access_token = token.id_token;
+              gapi.auth.setToken(token);
+              // User is signed in, call my Endpoint
+            }
+          });
+        }
+
     }
-    //tenemos que agregar un campo único a todas las entidades para hacer consultas y convertir los id en autogenerados
-    //para que no nos explote en la cara cuando crezca el tamaño del sitio :)
 });
 ////////////////////////////////////////////////// END CONTROLLERS /////////////////////////////////////////////////////
 
