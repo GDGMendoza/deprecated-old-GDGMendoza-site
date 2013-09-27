@@ -55,7 +55,7 @@ class GDGMendozaAPI(remote.Service):
 
     @Post.method(name='post.get', ########### FUNCIONA ############
                  request_fields=('id',),
-                 path='getpost',
+                 path='get/post',
                  http_method='GET',
                  response_fields=('title','author_id','description','content','cover','date','tags','comments_all') ######## AHORA QUIERO QUE ADEMAS DEVUELVA LOS COMENTARIOS Y EL AUTOR COMPLETO DE CADA UNO #######
     )

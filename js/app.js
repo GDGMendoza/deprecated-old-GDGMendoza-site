@@ -1,24 +1,13 @@
-var app = angular.module('gdgApp', ['ngRoute','ngAnimate','ngSanitize','ui.tinymce']);
-
-function init(){
-    $window.init();
-}
+var app = angular.module('gdgApp', ['restangular','ngRoute','ngAnimate','ngSanitize', 'ui.tinymce']);
 
 ////////////////////////////////////////////////// START ROUTING ///////////////////////////////////////////////////////
+app.config(function(RestangularProvider){
+
+    RestangularProvider.setBaseUrl('_ah/api/gdgmendoza/v1');
+
+});
+
 app.config(function($routeProvider, $httpProvider) {
-
-    $window = app.service("$window");
-
-    /* Hay que poner un promise .... no se tiene que ver nada hasta estar cargada la api */
-    $window.init = function(){
-
-        gapi.client.load('gdgmendoza', 'v1', function() {
-
-            console.log("api cargada")
-
-        }, '/_ah/api');
-
-    };
 
     $routeProvider.when('/', {
         templateUrl:'homeView.html',
@@ -28,10 +17,13 @@ app.config(function($routeProvider, $httpProvider) {
             templateUrl: 'postListView.html',
             controller: "PostListCtrl",
             resolve: {
-                data: function($q, dataService){
+                data: function($q, dataService, Restangular){
+
                     var defer = $q.defer();
 
-                    gapi.client.gdgmendoza.post.list().execute(function(response) {
+                    var basePosts = Restangular.oneUrl('post');//Hago que apunte a la url del post
+
+                    basePosts.get().then(function(response){
 
                         dataService.saveData("posts", response.items)
 
@@ -40,21 +32,23 @@ app.config(function($routeProvider, $httpProvider) {
                     });
 
                     return defer.promise;
+
                 }
             }
         }).when('/blog/:postid',{
             templateUrl: 'postView.html',
             controller: "PostCtrl",
             resolve: {
-                data: function($q, $route, $rootScope, $timeout, dataService){
+                data: function($q, $route, dataService, Restangular){
                     var defer = $q.defer();
-                    var postId = $route.current.params.postid;
 
-                    gapi.client.gdgmendoza.post.get({'id':postId}).execute(function(response) {
+                    var basePost = Restangular.oneUrl('get/post');
+
+                    basePost.getList(false,{id: $route.current.params.postid}).then(function(response){
 
                         response.comments_all = JSON.parse(response.comments_all);
 
-                        defer.resolve(response);
+                        defer.resolve(response)
 
                     });
 
@@ -68,12 +62,15 @@ app.config(function($routeProvider, $httpProvider) {
             templateUrl: 'whoWeAre.html',
             controller: "WWACtrl",
             resolve: {
-                data: function($q, dataService){
+                data: function($q, dataService, Restangular){
                     var defer = $q.defer();
 
-                    gapi.client.gdgmendoza.contributor.list().execute(function(response) {
+                    var baseContributor = Restangular.oneUrl('contributor');
+
+                    baseContributor.get().then(function(response){
 
                         dataService.saveData("contributors", response.items);
+
                         defer.resolve();
 
                     });
@@ -150,7 +147,9 @@ app.controller('LoginCtrl', function($scope){
     $scope.login = function(){
         console.log('Loguear')
 
-        /* Para probarlo creo que hay que registrar la App https://cloud.google.com/console */
+    /*
+
+        // Para probarlo creo que hay que registrar la App https://cloud.google.com/console
 
         gapi.auth.authorize({client_id: 'gdgmendoza.apps.googleusercontent.com',
             scope: 'https://www.googleapis.com/auth/userinfo.email', immediate: 'false',
@@ -169,7 +168,7 @@ app.controller('LoginCtrl', function($scope){
             }
           });
         }
-
+    */
     }
 });
 ////////////////////////////////////////////////// END CONTROLLERS /////////////////////////////////////////////////////
