@@ -23,7 +23,15 @@ class Session (EndpointsModel):  #tuvimos que moverlo de session_model a event_m
         if self.key is not None:
             return self.key.string_id()
 
+
 class Event (EndpointsModel):
+    """
+    Cambiar modelo
+        El evento tiene que tener las sesiones como structured property
+            Cada sesion tiene que tener un Key en cada ese objeto que apunte a la sesion real
+            La diferencia es que dentro de esa estructura tenemos la hora de comienzo y de fin
+            De esta forma solo cambiaria la hora pero lo demas seguiria igual
+    """
 
     _message_fields_schema = 'id', 'title', 'description', 'date', 'tags', 'gmap', 'flag', 'gplus_eventid'
 

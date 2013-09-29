@@ -3,6 +3,8 @@ from google.appengine.ext import endpoints
 from protorpc import remote
 from google.appengine.ext import ndb
 
+#https://gist.github.com/aseemk/4461785 ESTÁNDARES
+
 ##################### MODELS ########################
 from api.models_cloud.post_model import Post
 from api.models_cloud.comment_model import Comment
@@ -26,10 +28,198 @@ class GDGMendozaAPI(remote.Service):
         contributor.put()
         return contributor
 
+    @Contributor.method(name='contributor.edit', ########### FUNCIONA ############
+                        path='contributor/{id}',
+                        request_fields=('id', 'name', 'job_position', 'company', 'google_plus', 'facebook', 'twitter', 'description', 'photo'),
+                        user_required=True,
+                        response_fields=('id',))
+    def edit_contributor(self, contributor):
+        if not contributor.from_datastore:
+            raise endpoints.BadRequestException( 'User %s does not exists.' % (contributor.id,))
+        if contributor.id != endpoints.get_current_user().email(): #para que no pisen el id al ejecutarse el set_id
+            raise endpoints.BadRequestException( 'Invalid user')
+        contributor.put()
+        return contributor
+
     @Contributor.query_method(name='contributor.list', ########### FUNCIONA ############
                               path='contributor')
     def contributor_list(self, query):
         return query
+
+    @Contributor.method(name='contributor.get', ########### FUNCIONA ############
+                 request_fields=('id',),
+                 path='contributor/{id}',
+                 http_method='GET')
+    def get_contributor(self, contributor):
+        if not contributor.from_datastore:
+            raise endpoints.NotFoundException('Contributor not found.')
+        return contributor
+
+    @Contributor.method(name='contributor.delete', ########### FUNCIONA ############
+                 path='contributor/{id}',
+                 http_method='DELETE',
+                 request_fields=('id',),
+                 response_fields=('id',),
+                 user_required=True) ####### Devuelve el ID cuando se borro correctamente #######
+    def delete_contributor(self, contributor):
+        if contributor.id != endpoints.get_current_user().email(): # Para que no borren la cuenta de alguien mas
+            raise endpoints.BadRequestException( 'Invalid user')
+        if contributor.from_datastore:
+            ndb.Key("Contributor", contributor.id).delete()
+        else:
+            raise endpoints.NotFoundException('Contributor not found.')
+        return contributor
+
+
+
+    ################## EVENT ##################
+    @Event.method(name="event.insert", ########## FUNCIONA ###########
+                  request_fields=('id', 'title', 'description', 'date', 'tags', 'gmap', 'flag', 'gplus_eventid', 'sessions_id'),
+                  response_fields=('id',),
+                  path='event',
+                  user_required=True)
+    def insert_event(self, event):
+        if event.from_datastore:
+            name = event.key.string_id()
+            raise endpoints.BadRequestException( 'Event of name %s already exists.' % (name,))
+        for session in event.sessions_id:
+            event.sessions.append(ndb.Key(Session, str(session)))
+        event.sessions_id = []
+        event.put()
+        return event
+
+    @Event.method(name="event.edit", ########## FUNCIONA ###########
+                  request_fields=('id', 'title', 'description', 'date', 'tags', 'gmap', 'flag', 'gplus_eventid'),
+                  response_fields=('id',),
+                  path='event/{id}',
+                  user_required=True)
+    def edit_event(self, event):
+        if not event.from_datastore:
+            name = event.key.string_id()
+            raise endpoints.BadRequestException( 'Event of name %s does not exists.' % (name,))
+        event.put()
+        return event
+
+    @Event.method(name='event.get', ########### FUNCIONA ############ Pero no devuelve las sesiones
+                 request_fields=('id',),
+                 path='event/{id}',
+                 http_method='GET',
+                 response_fields=('id', 'title', 'description', 'date', 'tags', 'gmap', 'flag', 'gplus_eventid', 'full_sessions')
+    )
+    def get_event(self, event):
+        if not event.from_datastore:
+            raise endpoints.BadRequestException('Event not found.')
+        return event
+
+    @Event.query_method(name="event.list", ########## FUNCIONA ###########
+                        path="event")
+    def event_list(self, query):
+        return query
+
+    @Event.method(name='event.delete', ########### FUNCIONA ############
+                 path='event/{id}',
+                 http_method='DELETE',
+                 request_fields=('id',),
+                 response_fields=('id',),
+                 user_required=True) ####### Devuelve el ID cuando se borro correctamente #######
+    def delete_event(self, event):
+        if event.from_datastore:
+            ndb.Key("Event", event.id).delete()
+        else:
+            raise endpoints.BadRequestException('Event not found.')
+        return event
+
+    @Event.method(name="event.add_sessions", ########## FUNCIONA ########### Testear si funciona que no se repita
+                  request_fields=('id', 'sessions_id'),
+                  response_fields=('id',),
+                  path='event/{id}/add_sessions',
+                  user_required=True)
+    def add_sessions(self, event):
+        if not event.from_datastore:
+            name = event.key.string_id()
+            raise endpoints.BadRequestException( 'Event of name %s not exists.' % (name,))
+        fullEvent = Event.get_by_id(event.id)
+        for session in event.sessions_id:
+            aux = ndb.Key(Session, str(session))
+            if aux not in fullEvent.sessions:
+                fullEvent.sessions.append(aux)
+        fullEvent.put()
+        return event
+
+    @Event.method(name="event.remove_sessions", ########## FUNCIONA ###########
+                  request_fields=('id', 'sessions_id'),
+                  response_fields=('id',),
+                  path='event/{id}/remove_sessions',
+                  user_required=True)
+    def remove_sessions(self, event):
+        if not event.from_datastore:
+            name = event.key.string_id()
+            raise endpoints.BadRequestException( 'Event of name %s not exists.' % (name,))
+        fullEvent = Event.get_by_id(event.id)
+        for session in event.sessions_id:
+            fullEvent.sessions.remove(ndb.Key(Session, str(session)))
+        fullEvent.put()
+        return event
+
+    ################## SESSION ##################
+    @Session.method(name='session.insert', ########## FUNCIONA ###########
+                    request_fields=('id', 'title', 'overview', 'startTime', 'endTime', 'contributors_id'),
+                    response_fields=('id',),
+                    path='session/{id}',
+                    user_required=True)
+    def insert_session(self, session):
+        if session.from_datastore:
+            name = session.key.string_id()
+            raise endpoints.BadRequestException( 'Session of name %s already exists.' % (name,))
+        for contributor in session.contributors_id:
+            session.contributors.append(ndb.Key(Contributor, str(contributor)))
+        session.contributors_id = []
+        session.put()
+        return session
+
+    @Session.method(name="session.edit",
+                  request_fields=('id', 'title', 'overview', 'startTime', 'endTime', 'contributors_id'),
+                  response_fields=('id',),
+                  path='session/{id}',
+                  user_required=True)
+    def edit_session(self, session):
+        if not session.from_datastore:
+            name = session.key.string_id()
+            raise endpoints.BadRequestException( 'Session of name %s does not exists.' % (name,))
+        session.put()
+        return session
+
+    @Session.method(name='session.get',
+                 request_fields=('id',),
+                 path='session/{id}',
+                 http_method='GET',
+                 user_required=True)
+    def get_session(self, session):
+        if not session.from_datastore:
+            raise endpoints.BadRequestException('Session not found.')
+        return session
+
+    @Session.query_method(name="session.list",
+                        path="session",
+                        user_required=True)
+    def session_list(self, query):
+        return query
+
+    @Session.method(name='session.delete',
+                 path='session/{id}',
+                 http_method='DELETE',
+                 request_fields=('id',),
+                 response_fields=('id',),
+                 user_required=True) ####### Devuelve el ID cuando se borro correctamente #######
+    def delete_session(self, session):
+        if session.from_datastore:
+            ndb.Key("Session", session.id).delete()
+        else:
+            raise endpoints.BadRequestException('Session not found.')
+        return session
+
+
+# DE ACA EN ADELANTE POROBOMBOMBOM CAJAAAAAAAAAAAA CAJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA HOLA
 
     ################## POST #####################
     @Post.method(name='post.insert', ########### FUNCIONA ############
@@ -81,95 +271,7 @@ class GDGMendozaAPI(remote.Service):
         post.put()
         return comment
 
-    ################## EVENT ##################
-    @Event.method(name="event.insert", ########## FUNCIONA ###########
-                  request_fields=('id', 'title', 'description', 'date', 'tags', 'gmap', 'flag', 'gplus_eventid', 'sessions_id'),
-                  path='event',
-                  user_required=True)
-    def insert_event(self, event):
-        if event.from_datastore:
-            name = event.key.string_id()
-            raise endpoints.BadRequestException( 'Event of name %s already exists.' % (name,))
-        for session in event.sessions_id:
-            event.sessions.append(ndb.Key(Session, str(session)))
-        event.sessions_id = []
-        event.put()
-        return event
-
-    @Event.method(name="event.add.sessions", ########## FUNCIONA ########### Aunque se puede repetir una misma Session, y no verifica si el ID de la Session realmente existe
-                  request_fields=('id', 'sessions_id'),
-                  path='event/add_sessions',
-                  user_required=True)
-    def add_sessions(self, event):
-        if not event.from_datastore:
-            name = event.key.string_id()
-            raise endpoints.BadRequestException( 'Event of name %s not exists.' % (name,))
-        fullEvent = Event.get_by_id(event.id)
-        for session in event.sessions_id:
-            fullEvent.sessions.append(ndb.Key(Session, str(session)))
-        fullEvent.put()
-        return event
-
-    @Event.method(name="event.remove.sessions", ########## FUNCIONA ###########
-                  request_fields=('id', 'sessions_id'),
-                  path='event/remove_sessions',
-                  user_required=True)
-    def remove_sessions(self, event):
-        if not event.from_datastore:
-            name = event.key.string_id()
-            raise endpoints.BadRequestException( 'Event of name %s not exists.' % (name,))
-        fullEvent = Event.get_by_id(event.id)
-        for session in event.sessions_id:
-            fullEvent.sessions.remove(ndb.Key(Session, str(session)))
-        fullEvent.put()
-        return event
-
-    @Event.method(name="event.remove.delete.sessions", ########## FUNCIONA ########### Hay que testearlo mejor
-                  request_fields=('id', 'sessions_id'),
-                  path='event/remove_and_delete_sessions',
-                  user_required=True)
-    def remove_sessions(self, event):
-        if not event.from_datastore:
-            name = event.key.string_id()
-            raise endpoints.BadRequestException( 'Event of name %s not exists.' % (name,))
-        fullEvent = Event.get_by_id(event.id)
-        for session in event.sessions_id:
-            fullEvent.sessions.remove(ndb.Key(Session, str(session)))
-            ndb.Key(Session, str(session)).delete()
-        fullEvent.put()
-        return event
-
-    @Event.method(name='event.get', ########### FUNCIONA ############ Pero no devuelve las sesiones
-                 request_fields=('id',),
-                 path='event/get',
-                 http_method='GET',
-                 response_fields=('id', 'title', 'description', 'date', 'tags', 'gmap', 'flag', 'gplus_eventid', 'full_sessions')
-    )
-    def get_event(self, event):
-        if not event.from_datastore:
-            raise endpoints.NotFoundException('Event not found.')
-        return event
-
-    @Event.query_method(name="event.list", ########## FUNCIONA ###########
-                        path="event")
-    def event_list(self, query):
-        return query
-
-    ################## SESSION ##################
-    @Session.method(name='session.insert', ########## FUNCIONA ###########
-                    request_fields=('id', 'title', 'overview', 'startTime', 'endTime', 'contributors_id'),
-                    path='session',
-                    user_required=True)
-    def insert_session(self, session):
-        if session.from_datastore:
-            name = session.key.string_id()
-            raise endpoints.BadRequestException( 'Session of name %s already exists.' % (name,))
-        for contributor in session.contributors_id:
-            session.contributors.append(ndb.Key(Contributor, str(contributor)))
-        session.contributors_id = []
-        session.put()
-        return session
+############ PARA VER SERVICIOS: /_ah/api/explorer
 
 application = endpoints.api_server([GDGMendozaAPI])
 
-############ PARA VER SERVICIOS: /_ah/api/explorer
