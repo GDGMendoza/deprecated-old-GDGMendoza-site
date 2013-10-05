@@ -165,7 +165,7 @@ class GDGMendozaAPI(remote.Service):
     @Session.method(name='session.insert', ########## FUNCIONA ###########
                     request_fields=('id', 'title', 'overview', 'startTime', 'endTime', 'contributors_id'),
                     response_fields=('id',),
-                    path='session/{id}',
+                    path='session',
                     user_required=True)
     def insert_session(self, session):
         if session.from_datastore:
@@ -234,24 +234,57 @@ class GDGMendozaAPI(remote.Service):
         return post
 
     @Post.method(name='post.delete', ########### FUNCIONA ############
-                 path='deletepost/{id}',
-                 response_fields=('id',)) ####### Devuelve el ID cuando se borro correctamente #######
+                 path='post/{id}',
+                 http_method="DELETE",
+                 request_fields=('id',),
+                 response_fields=('id',),
+                 user_required=True) ####### Devuelve el ID cuando se borro correctamente #######
     def delete_post(self, post):
         if post.from_datastore:
-            Post.Key("Post", post.id).delete()
+            ndb.Key("Post", post.id).delete()
         else:
             raise endpoints.NotFoundException('Post not found.')
         return post
+    
+    @Post.method(name="post.edit",
+                  request_fields=('id', 'title', 'description', 'cover', 'tags'),
+                  response_fields=('id',),
+                  path='post/{id}',
+                  user_required=True)
+    def edit_post(self, post):
+        if not post.from_datastore:
+            name = post.key.string_id()
+            raise endpoints.BadRequestException( 'Post of name %s does not exists.' % (name,))
+        post.put()
+        return post
 
-    @Post.method(name='post.get', ########### FUNCIONA ############
+    # @Post.method(name='post.delete.comment',
+    #              path='post/{id}',
+    #              http_method="DELETE",
+    #              request_fields=('id','comment_id'),
+    #              response_fields=('id',),
+    #              user_required=True) ####### Devuelve el ID cuando se borro correctamente #######
+    # def delete_post_comment(self, post):
+    #     if post.from_datastore:
+    #         comments = []
+    #         fullPost = Post.get_by_id(post.id)
+    #         for comment in fullPost.comments:
+    #             if comment.id != post.comment_id:
+    #                 comments.append(comment)
+    #         fullPost.comments = comments
+    #         fullPost.put()
+    #     else:
+    #         raise endpoints.NotFoundException('Post not found.')
+    #     return post
+    
+    @Post.method(name='post.get',
                  request_fields=('id',),
-                 path='get/post',
+                 path='post/{id}',
                  http_method='GET',
-                 response_fields=('title','author_id','description','content','cover','date','tags','comments_all') ######## AHORA QUIERO QUE ADEMAS DEVUELVA LOS COMENTARIOS Y EL AUTOR COMPLETO DE CADA UNO #######
-    )
+                 response_fields=('title','author_id','description','content','cover','date','tags','comments_all')) ######## AHORA QUIERO QUE ADEMAS DEVUELVA LOS COMENTARIOS Y EL AUTOR COMPLETO DE CADA UNO #######
     def get_post(self, post):
         if not post.from_datastore:
-            raise endpoints.NotFoundException('Post not found.')
+            raise endpoints.BadRequestException('Post not found.')
         return post
 
     @Post.query_method(name='post.list', ########## FUNCIONA ###########
@@ -267,7 +300,11 @@ class GDGMendozaAPI(remote.Service):
                     response_fields=('post_id',)) ####### Devuelve el ID cuando se borro correctamente #######
     def insert_comment(self, comment):
         post = Post.get_by_id(comment.post_id)
-        post.comments.append(Comment(content = comment.content, author = ndb.Key(Contributor, str(endpoints.get_current_user().email()))))
+        id = 1
+        for this_comment in post.comments:
+            if this_comment.id_aux > id:
+                id = this_comment.id_aux + 1
+        post.comments.append(Comment(id_aux = id, content = comment.content, author = ndb.Key(Contributor, str(endpoints.get_current_user().email()))))
         post.put()
         return comment
 

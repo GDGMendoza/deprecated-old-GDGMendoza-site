@@ -12,6 +12,7 @@ class Comment(EndpointsModel):
     author = ndb.KeyProperty(kind=Contributor)
     content = ndb.StringProperty(required=True)
     date = ndb.DateTimeProperty(auto_now_add=True)
+    id_aux = ndb.IntegerProperty()
     post_id = ndb.StringProperty() ####### MI SUPER VARIABLE AUXILIAR !! By Cristian ;) ########
 
     @EndpointsAliasProperty()

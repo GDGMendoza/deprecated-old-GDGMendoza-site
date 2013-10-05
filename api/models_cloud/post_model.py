@@ -19,6 +19,7 @@ class Post(EndpointsModel):
     date = ndb.DateTimeProperty(auto_now_add=True)
     tags = ndb.StringProperty(repeated=True)
     comments = ndb.StructuredProperty(Comment, repeated=True)
+    comment_id = ndb.IntegerProperty() # Variable auxiliar
 
     def IdSet(self, value):
         self.UpdateFromKey(ndb.Key(Post, str(value)))
@@ -37,5 +38,5 @@ class Post(EndpointsModel):
         post = Post._get_by_id(self.id)
         comments = []
         for comment in post.comments:
-            comments.append({'author_id':comment.author.get().id,'content':comment.content,'date':comment.date.isoformat()})
+            comments.append({'id': comment.id_aux, 'author_id':comment.author.get().id,'content':comment.content,'date':comment.date.isoformat()})
         return json.dumps(comments)
