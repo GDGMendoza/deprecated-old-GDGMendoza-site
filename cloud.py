@@ -302,9 +302,9 @@ class GDGMendozaAPI(remote.Service):
         post = Post.get_by_id(comment.post_id)
         id = 1
         for this_comment in post.comments:
-            if this_comment.id_aux > id:
-                id = this_comment.id_aux + 1
-        post.comments.append(Comment(id_aux = id, content = comment.content, author = ndb.Key(Contributor, str(endpoints.get_current_user().email()))))
+            if this_comment.id_aux >= id:
+                id = this_comment.id_aux
+        post.comments.append(Comment(id_aux = id + 1, content = comment.content, author = ndb.Key(Contributor, str(endpoints.get_current_user().email()))))
         post.put()
         return comment
 
