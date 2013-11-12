@@ -1,15 +1,3 @@
+node_modules/
+public/bower_components
 .idea/
-.idea/.name
-.idea/encodings.xml
-.idea/gdgmendoza.iml
-.idea/libraries/Google_App_Engine_SDK.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/other.xml
-.idea/scopes/scope_settings.xml
-.idea/testrunner.xml
-.idea/vcs.xml
-.idea/workspace.xml
-.idea/dictionaries/Hernan.xml
-.idea/inspectionProfiles/profiles_settings.xml
-.idea/inspectionProfiles/Project_Default.xml

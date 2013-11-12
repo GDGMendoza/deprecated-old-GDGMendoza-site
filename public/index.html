@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="gdgApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDG Mendoza</title>
+
+    <!-- Modules -->
+    <script src="bower_components/tinymce/tinymce.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/lodash/dist/lodash.js"></script><!-- dependencia restangular -->
+    <script src="bower_components/restangular/dist/restangular.js"></script>
+    <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    
+    <!-- Custom -->
+    <link rel="stylesheet" href="stylesheets/main.css" media="screen">
+    <script src="javascripts/app.js"></script>
+    
+</head>
+<body>
+<!-- Dynamic Content -->
+<div id="main-container">
+    <header class="row">
+        <div class="visible-sm visible-xs col-sm-12 col-xs-12 navbar-toggle-container" >
+            <button type="button" class="navbar-toggle pull-right">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <nav class="link-effect row col-md-12">
+            <div class="col-md-1 col-sm-12 col-xs-12 header-center" >
+                <a href="#/blog">Blog</a>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12" >
+                <a href="#/events">Events</a>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12" >
+                <a href="#/who-we-are">WWA</a>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12" >
+                <a href="#">Contact</a>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12" ng-controller="LoginCtrl" >
+                <a href="" ng-click="login()">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <div id="body" class="container iswhoweare" ng-view></div>
+
+    <footer class="row">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <img class="pagination-centered footer-logo" src="/images/logo-footer.png" alt="GDG Mendoza Logo"/>
+        </div>
+        <div class="row col-md-6 col-sm-12 col-xs-12">
+            <div class="col-md-3 col-sm-3 col-xs-3 footer-list footer-center">
+                <ul class="list-unstyled">
+                    <li>Home</li>
+                    <li>Blog</li>
+                    <li>WWA</li>
+                    <li>Events</li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 footer-list">
+                <ul class="list-unstyled">
+                    <li>Contact</li>
+                    <li>Search</li>
+                    <li>Login</li>
+                    <li>Register</li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 footer-list">
+                <ul class="list-unstyled">
+                    <li>Follow us</li>
+                    <li>Google Plus</li>
+                    <li>Facebook</li>
+                    <li>Twitter</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script id="homeView.html" type="text/ng-template">
+    <div class="row separator">
+        <img class="big-image" src="/images/home-img.jpg" alt=""/>
+    </div>
+    <div class="row">
+        <h2 class="leyend leyend-margin-30">Recent Activity</h2>
+    </div>
+    <div class="row recent-container">
+        <div class="col-md-6 outer-left-column">
+            <div class="recent-column">
+                <h3>Latest Events</h3>
+                <div class="post-preview">
+                    <h4 class="red">Lorem ipsum dolor sit.</h4>
+                    <p class="post-preview-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut culpa ea inventore non perspiciatis? Dolorem ipsam quidem repellendus.</p>
+                    <a href="#">Read more</a>
+                </div>
+                <div class="post-preview">
+                    <h4 class="red">Lorem ipsum dolor sit.</h4>
+                    <p class="post-preview-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut culpa ea inventore non perspiciatis? Dolorem ipsam quidem repellendus.</p>
+                    <a href="#">Read more</a>
+                </div>
+                <div class="post-preview">
+                    <h4 class="red">Lorem ipsum dolor sit.</h4>
+                    <p class="post-preview-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut culpa ea inventore non perspiciatis? Dolorem ipsam quidem repellendus.</p>
+                    <a href="#">Read more</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 outer-right-column">
+            <div class="recent-column">
+                <h3>Trending News</h3>
+                <img class="image-responsive" src="/images/googleglass.jpg" alt=""/>
+                <div class="news-container">
+                    <h4 class="news-title">Soy re PRO</h4>
+                    <p class="news-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad autem dolore ea eligendi eveniet expedita fugit illum ipsum iste iure labore laborum, minima, modi odio officiis qui, quia recusandae tempore unde vel velit veritatis voluptas voluptatem voluptates. At autem explicabo, fuga impedit inventore officiis perspiciatis saepe similique tenetur voluptatum.</p>
+                    <a href="">Read more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <h2 class="leyend">Recent Posts</h2>
+    </div>
+</script>
+
+
+<script id="postListView.html" type="text/ng-template">
+    <div class="row" ng-repeat="post in postList" ng-include="getPostTemplate($index)"></div>
+</script>
+
+<script id="postPreviewBigComponent.html" type="text/ng-template">
+    <div class="row">
+        <div class="col-md-2 col-sm-2 col-xs-12 author-img">
+            <a href="#">
+                <img class="image-shadow" ng-src="{{post.author.photo}}" alt="Profile photo of {{post.author.name }}"/>
+            </a>
+        </div>
+        <div class="col-md-8 col-sm-8 col-xs-12 big-post-container">
+            <h1><a class="dark-grey dark-grey-hover"ng-href="#/blog/{{post.id}}">{{post.title}}</a></h1>
+            <h3 class="big-post-author"><a class="red red-hover" ng-href="#">{{post.author.name}}</a></h3>
+            <a class="big-post-date grey grey-hover" ng-href="#">Date: {{post.date}}</a>
+        </div>
+    </div>
+    <div class="row">
+        <img class="col-md-12 image-shadow fix-row-padding big-image" ng-src="{{post.cover}}" alt="">
+    </div>
+    <div class="row big-post-foot">
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <div class="row tag-container-tiny">
+                <a class="label label-default tag-preview" ng-href="#" ng-repeat="tag in post.tags">{{tag}}</a>
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-3 col-xs-12 big-post-container line-height">
+            <p>{{post.description}}</p>
+            <a href="#/blog/{{ post.id }}">Read more</a>
+        </div>
+    </div>
+</script>
+
+<script id="postPreviewTinyComponent.html" type="text/ng-template">
+    <div class="row">
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <div class="row tag-container-tiny">
+                <a class="label label-default tag-preview" ng-href="#" ng-repeat="tag in post.tags">{{tag}}</a>
+            </div>
+            <div class="row">
+                <div class="media">
+                    <a class="pull-left" href="#">
+                        <img class="media-object image-shadow tiny-contributor-image" ng-src="{{post.author.photo}}" alt="Profile photo of {{post.author.name }}">
+                    </a>
+                    <div class="media-body">
+                        <h5 class="tiny-post-author"><a class="red red-hover" ng-href="#">{{post.author.name}}</a></h5>
+                        <a class="tiny-post-date grey grey-hover" ng-href="#">Date: {{post.date}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-9 col-xs-12 tiny-post-container line-height">
+            <div class="col-md-3 col-sm-3 col-xs-12 fix-row-padding">
+                <img class="image-shadow tiny-image" ng-src="{{post.cover}}" alt="">
+            </div>
+            <div class="col-md-9 col-sm-9 col-xs-12 tiny-description">
+                <h4><a class="dark-grey dark-grey-hover" ng-href="#/blog/{{post.id}}">{{post.title}}</a></h4>
+                <p>{{post.description}}</p>
+                <a href="#/blog/{{ post.id }}">Read more</a>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="postView.html" type="text/ng-template">
+    <div class="row separator">
+        <img class="col-md-12 image-shadow fix-row-padding big-image" ng-src="{{post.cover}}" alt="">
+    </div>
+    <div class="row big-post-foot">
+        <div class="col-md-3 col-sm-3 col-xs-12 text-center">
+            <img class="image-shadow author-img" ng-src="{{post.author.photo}}" alt="Profile photo of {{post.author.name }}"/>
+            <h4 class="post-author"><a class="red red-hover" ng-href="#">{{post.author.name}}</a></h4>
+            <div class="tag-container-tiny">
+                <a class="label label-default tag-preview" ng-href="#" ng-repeat="tag in post.tags">{{tag}}</a>
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-9 col-xs-12 big-post-container line-height">
+            <h1 class="dark-grey post-title">{{ post.title }}</h1>
+            <a class="big-post-date light-grey light-grey-hover" ng-href="#">Date: {{post.date}}</a>
+            <p class="post-paragraph">{{post.description}}</p>
+            <p class="post-paragraph">{{post.description}}</p>
+            <div class="row separator post-social-container">
+                <a class="pull-right gplus-icon gplus-icon-big" href="{{ post.author.gplus }}"><img src="/images/gplus.png" alt=""/></a>
+                <a class="pull-right fb-icon fb-icon-big" href="{{ post.author.fb }}"><img src="/images/facebook.png" alt=""/></a>
+                <a class="pull-right tw-icon tw-icon-big"href="{{ post.author.tw }}"><img src="/images/twitter.png" alt=""/></a>
+            </div>
+            <comment ng-repeat="comment in post.comments_all"></comment>
+            <form method="post" ng-submit="subir()">
+                <div class="tiny-post-container">
+                    <textarea class="comment" ng-model="escribir.contenido" placeholder="Write a comment..." maxlength="500"></textarea>
+                    <div class="marco bot auto right">
+                        <button type="submit" class="btn comment">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>
+
+<script id="whoWeAre.html" type="text/ng-template">
+    <div class="wwa-background">
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-8">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 fix-row-padding" ng-repeat="contributor in contributorList">
+                <div class="wwa-contributor-container">
+                    <div class="media">
+                        <a class="pull-left" href="#">
+                            <img class="media-object image-shadow wwa-contributor-image" ng-src="{{contributor.photo}}" alt="Profile photo of {{contributor.name }}">
+                        </a>
+                        <div class="media-body wwa-media-body">
+                            <h4 class="wwa-contributor-name"><a class="red red-hover" ng-href="#">{{contributor.name}}</a></h4>
+                            <p>Developer</p>
+                        </div>
+                    </div>
+                    <div class="media social-tiny-container">
+                        <a class="pull-left gplus-icon gplus-icon-tiny" href="{{ contributor.gplus }}"><img src="/images/gplus.png" alt=""/></a>
+                        <a class="pull-left fb-icon fb-icon-tiny" href="{{ contributor.fb }}"><img src="/images/facebook.png" alt=""/></a>
+                        <a class="pull-left tw-icon tw-icon-tiny"href="{{ contributor.tw }}"><img src="/images/twitter.png" alt=""/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+</body>
+</html>

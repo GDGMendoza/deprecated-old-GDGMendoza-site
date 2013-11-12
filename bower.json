@@ -1,0 +1,24 @@
+{
+  "name": "GDGMendoza",
+  "version": "0.0.1",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "public/bower_components"
+  ],
+  "dependencies": {
+    "angular": "1.2.0",
+    "lodash": "latest",
+    "restangular": "latest",
+    "angular-sanitize": "1.2.0",
+    "angular-route": "latest",
+    "angular-animate": "latest",
+    "angular-socket-io": "0.2.0",
+    "bootstrap": "latest",
+    "tinymce": "latest",
+    "angular-ui-tinymce": "latest"
+  },
+  "resolutions": {
+    "angular": "1.2.0"
+  }
+}
